@@ -1,10 +1,12 @@
 import Image from 'next/image';
+import { useRecoilValue } from 'recoil';
 
 import deleteIcon from '../public/icon-cross.svg';
+import { todosAtom } from '../utils/recoilState/atoms';
 
 function TodosList({ todos }) {
   return (
-    <div className='flex flex-col divide-y bg-light-Very-Light-Gray rounded-md shadow-md shadow-light-Very-Light-Grayish-Blue'>
+    <div className='duration-1000 flex flex-col divide-y bg-light-Very-Light-Gray rounded-md shadow-md shadow-light-Very-Light-Grayish-Blue'>
       {todos.map((todo) => (
         <TodoItem key={todo.id} todo={todo} />
       ))}
@@ -29,7 +31,7 @@ function TodoItem({ todo }) {
         />
         <p
           className={`flex-1 text-light-Very-Dark-Grayish-Blue focus:outline-none placeholder:text-xs ${
-            todo.completed === true && 'line-through'
+            todo.completed === true && 'line-through text-light-Grayish-Blue'
           }`}
         >
           {todo.text}
@@ -48,7 +50,8 @@ function TodoItem({ todo }) {
   );
 }
 
-function SummaryBar({ todos }) {
+function SummaryBar() {
+  const todos = useRecoilValue(todosAtom);
   const left = todos.filter((todo) => todo.completed === false);
   return (
     <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue'>
