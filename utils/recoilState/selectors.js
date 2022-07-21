@@ -2,7 +2,7 @@ import { selector } from 'recoil';
 
 import { todosAtom, filterAtom } from './atoms';
 
-export const filteredTodos = selector({
+export const filteredTodosSelector = selector({
   key: 'filteredTodos',
   get: ({ get }) => {
     const todos = get(todosAtom);
