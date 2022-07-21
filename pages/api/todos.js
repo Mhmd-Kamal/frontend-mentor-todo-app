@@ -17,7 +17,7 @@ async function handler(req, res) {
         const { text, completed } = req.body;
         const newTodo = new Todo({ text, completed });
         await newTodo.save();
-        res.status(200).json({ message: 'Todo created' });
+        res.status(200).json({ message: 'Todo created', newTodo });
       } catch (error) {
         res.status(500).json(error);
       }

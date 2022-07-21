@@ -50,14 +50,17 @@ const Home = () => {
           className='flex bg-light-Very-Light-Gray font-bold cursor-pointer text-light-Dark-Grayish-Blue justify-center items-center gap-4 shadow-md rounded-md py-4 shadow-light-Very-Light-Grayish-Blue'
           onClick={(e) => setFilter(e.target.id)}
         >
-          <li className={filter === 'all' && 'text-Bright-Blue'} id='all'>
+          <li className={filter === 'all' ? 'text-Bright-Blue' : ''} id='all'>
             All
           </li>
-          <li className={filter === 'active' && 'text-Bright-Blue'} id='active'>
+          <li
+            className={filter === 'active' ? 'text-Bright-Blue' : ''}
+            id='active'
+          >
             Active
           </li>
           <li
-            className={filter === 'completed' && 'text-Bright-Blue'}
+            className={filter === 'completed' ? 'text-Bright-Blue' : ''}
             id='completed'
           >
             Completed

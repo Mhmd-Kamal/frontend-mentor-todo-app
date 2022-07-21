@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import deleteIcon from '../public/icon-cross.svg';
 import { todosAtom } from '../utils/recoilState/atoms';
@@ -8,7 +8,7 @@ function TodosList({ todos }) {
   return (
     <div className='duration-1000 flex flex-col divide-y bg-light-Very-Light-Gray rounded-md shadow-md shadow-light-Very-Light-Grayish-Blue'>
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} />
+        <TodoItem key={todo._id} todo={todo} />
       ))}
       {todos.length > 0 && <SummaryBar todos={todos} />}
     </div>
@@ -18,6 +18,27 @@ function TodosList({ todos }) {
 export default TodosList;
 
 function TodoItem({ todo }) {
+  const setTodos = useSetRecoilState(todosAtom);
+
+  async function handleDelete(deletedTodo) {
+    try {
+      const res = await fetch('/api/todos', {
+        method: 'DELETE',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({ id: deletedTodo._id }),
+      });
+      console.log(res);
+      if (res.ok)
+        setTodos((todos) =>
+          todos.filter((todo) => todo._id !== deletedTodo._id)
+        );
+    } catch (error) {
+      console.log(error, 'zzz');
+    }
+  }
+
   return (
     <div className='w-full rounded-md'>
       <div className='flex items-center gap-3 px-6 py-4'>
@@ -37,7 +58,10 @@ function TodoItem({ todo }) {
           {todo.text}
         </p>
 
-        <button className='flex items-center cursor-pointer'>
+        <button
+          onClick={() => handleDelete(todo)}
+          className='flex items-center cursor-pointer'
+        >
           <Image
             src={deleteIcon}
             width={15}
