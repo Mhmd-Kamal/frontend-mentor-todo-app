@@ -1,5 +1,5 @@
-import connectDB from '../../middleware/mongodb';
-import Todo from '../../utils/mongoose/model';
+import connectDB from '../../../middleware/mongodb';
+import Todo from '../../../utils/mongoose/model';
 
 async function handler(req, res) {
   switch (req.method) {
