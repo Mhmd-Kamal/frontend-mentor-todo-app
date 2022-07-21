@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import deleteIcon from '../public/icon-cross.svg';
 import { todosAtom } from '../utils/recoilState/atoms';
@@ -22,12 +22,8 @@ function TodoItem({ todo }) {
 
   async function handleDelete(deletedTodo) {
     try {
-      const res = await fetch('/api/todos', {
+      const res = await fetch(`/api/todos/${todo._id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-        body: JSON.stringify({ id: deletedTodo._id }),
       });
       if (res.ok)
         setTodos((todos) =>
@@ -44,10 +40,11 @@ function TodoItem({ todo }) {
       headers: {
         'content-type': 'application/json; charset=UTF-8',
       },
-      body: JSON.stringify({ id: todo._id, completed: !todo.completed }),
+      body: JSON.stringify({ completed: !todo.completed }),
     });
+
     const data = await res.json();
-    console.log(data);
+    // console.log(data);
     if (res.ok)
       setTodos((todos) => {
         const index = todos.findIndex((todo) => todo._id === modifiedTodo._id);
@@ -90,13 +87,31 @@ function TodoItem({ todo }) {
   );
 }
 
-function SummaryBar() {
-  const todos = useRecoilValue(todosAtom);
+function SummaryBar({ todos }) {
+  const setTodos = useSetRecoilState(todosAtom);
+
   const left = todos.filter((todo) => todo.completed === false);
+
+  const completedIDs = todos
+    .filter((todo) => todo.completed === true)
+    .map((todo) => todo._id);
+
+  async function handleDeleteCompleted() {
+    const res = await fetch('/api/todos', {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify({ completedIDs }),
+    });
+
+    const data = await res.json();
+    setTodos(data.todos);
+  }
   return (
     <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue'>
       <p className=''>{left.length} items left</p>
-      <button>Clear Completed</button>
+      <button onClick={handleDeleteCompleted}>Clear Completed</button>
     </div>
   );
 }

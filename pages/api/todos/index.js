@@ -25,9 +25,11 @@ async function handler(req, res) {
 
     case 'DELETE':
       try {
-        const { id } = req.body;
-        await Todo.findByIdAndDelete(id);
-        res.status(200).json({ message: 'Todo deleted' });
+        const { completedIDs } = req.body;
+        await Todo.deleteMany({ _id: { $in: completedIDs } });
+        const todos = await Todo.find({});
+
+        res.status(200).json({ todos });
       } catch (error) {
         res.status(500).json(error);
       }

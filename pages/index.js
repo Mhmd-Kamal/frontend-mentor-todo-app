@@ -16,7 +16,6 @@ const Home = () => {
   const setTodos = useSetRecoilState(todosAtom);
 
   async function fetchData() {
-    console.log(todos);
     const res = await fetch('/api/todos');
     const todos = await res.json();
     setTodos(todos);
