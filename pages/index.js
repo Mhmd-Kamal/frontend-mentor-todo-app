@@ -27,7 +27,17 @@ const Home = () => {
 
   return (
     <div className='flex flex-col items-stretch min-h-screen px-5 text-sm bg-no-repeat bg-mobile-light bg-light-Very-Light-Grayish-Blue'>
-      {/* TODO: add head tag. */}
+      <Head>
+        <title>Todos App</title>
+        <link rel='icon' href='/favicon-32x32.png' />
+        <meta
+          name='description'
+          content='A solution for frontend mentor todo app challenge'
+        />
+        <meta content='text/html;charset=UTF-8' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+        <meta name='application-name' content='Todos App' />
+      </Head>
       <div className='flex items-baseline justify-between w-full py-8'>
         <h1 className='text-2xl font-bold tracking-[0.4em] text-light-Very-Light-Gray'>
           TODO
