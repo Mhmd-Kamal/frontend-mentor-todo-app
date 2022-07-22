@@ -7,13 +7,20 @@ import NewTodo from '../components/NewTodo';
 import TodosList from '../components/TodosList';
 
 import darkThemeImg from '../public/icon-moon.svg';
-import { filterAtom, todosAtom } from '../utils/recoilState/atoms';
+import lightThemeImg from '../public/icon-sun.svg';
+
+import {
+  filterAtom,
+  darkModeAtom,
+  todosAtom,
+} from '../utils/recoilState/atoms';
 import { filteredTodosSelector } from '../utils/recoilState/selectors';
 
 const Home = () => {
   const filteredTodos = useRecoilValue(filteredTodosSelector);
   const [filter, setFilter] = useRecoilState(filterAtom);
   const setTodos = useSetRecoilState(todosAtom);
+  const [darkMode, setDarkMode] = useRecoilState(darkModeAtom);
 
   async function fetchData() {
     const res = await fetch('/api/todos');
@@ -26,7 +33,9 @@ const Home = () => {
   }, []);
 
   return (
-    <div className='flex flex-col items-stretch min-h-screen px-5 text-sm bg-no-repeat bg-mobile-light bg-light-Very-Light-Grayish-Blue'>
+    <div
+      className={`flex flex-col items-stretch min-h-screen px-5 text-sm bg-no-repeat bg-mobile-light bg-light-Very-Light-Grayish-Blue dark:bg-mobile-dark dark:bg-dark-Very-Dark-Blue`}
+    >
       <Head>
         <title>Todos App</title>
         <link rel='icon' href='/favicon-32x32.png' />
@@ -42,11 +51,11 @@ const Home = () => {
         <h1 className='text-2xl font-bold tracking-[0.4em] text-light-Very-Light-Gray'>
           TODO
         </h1>
-        <button>
+        <button onClick={() => setDarkMode(!darkMode)}>
           <Image
             width={20}
             height={20}
-            src={darkThemeImg}
+            src={darkMode ? lightThemeImg : darkThemeImg}
             alt='theme selector'
           />
         </button>
@@ -56,7 +65,7 @@ const Home = () => {
         <TodosList todos={filteredTodos} />
         <ul
           id='filters_div'
-          className='flex bg-light-Very-Light-Gray font-bold cursor-pointer text-light-Dark-Grayish-Blue justify-center items-center gap-4 shadow-md rounded-md py-4 shadow-light-Very-Light-Grayish-Blue'
+          className='flex bg-light-Very-Light-Gray dark:bg-dark-Very-Dark-Desaturated-Blue font-bold cursor-pointer text-light-Dark-Grayish-Blue justify-center items-center gap-4 shadow-md rounded-md py-4 shadow-light-Very-Light-Grayish-Blue dark:shadow-none'
           onClick={(e) => setFilter(e.target.id)}
         >
           <li className={filter === 'all' ? 'text-Bright-Blue' : ''} id='all'>
@@ -77,7 +86,7 @@ const Home = () => {
         </ul>
       </div>
       <div className=''>
-        <p className='pb-16 text-sm text-center text-light-Dark-Grayish-Blue'>
+        <p className='pb-16 pt-4 text-sm text-center text-light-Dark-Grayish-Blue dark:text-dark-Dark-Grayish-Blue'>
           Drag and drop to reorder list
         </p>
       </div>

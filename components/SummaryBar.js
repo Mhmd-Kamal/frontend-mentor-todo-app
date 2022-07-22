@@ -23,7 +23,7 @@ export function SummaryBar({ todos }) {
     setTodos(data.todos);
   }
   return (
-    <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue'>
+    <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue dark:text-light-Very-Dark-Grayish-Blue'>
       <p className=''>{left.length} items left</p>
       <button onClick={handleDeleteCompleted}>Clear Completed</button>
     </div>

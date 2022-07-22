@@ -30,14 +30,14 @@ function NewTodo() {
   }
 
   return (
-    <div className='w-full bg-white rounded-md'>
+    <div className='w-full bg-white dark:bg-dark-Very-Dark-Desaturated-Blue rounded-md'>
       <form
         onSubmit={handleSubmit}
         className='flex items-stretch gap-3 px-6 py-4'
       >
         <input
           ref={checkbox}
-          className='w-5 h-5 transition-all border rounded-full appearance-none cursor-pointer border-light-Very-Light-Grayish-Blue focus:outline-none checked:gradient'
+          className='w-5 h-5 transition-all border rounded-full appearance-none cursor-pointer border-light-Very-Light-Grayish-Blue dark:border-dark-Very-Dark-Grayish-Blue focus:outline-none checked:gradient'
           type='checkbox'
           name='status'
           id='completed_checkbox'
@@ -45,7 +45,7 @@ function NewTodo() {
         <input
           onChange={(event) => setText(event.target.value)}
           value={text}
-          className='flex-1 text-light-Very-Dark-Grayish-Blue focus:outline-none placeholder:text-xs'
+          className='flex-1 text-light-Very-Dark-Grayish-Blue focus:outline-none placeholder:text-xs bg-inherit'
           placeholder='Create a new todo...'
           type='text'
           name='text'

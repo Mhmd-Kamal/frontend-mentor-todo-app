@@ -1,10 +1,14 @@
 import { RecoilRoot } from 'recoil';
+import ThemeProvider from '../components/ThemeProvider';
+
 import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
     <RecoilRoot>
-      <Component {...pageProps} />
+      <ThemeProvider>
+        <Component {...pageProps} />
+      </ThemeProvider>
     </RecoilRoot>
   );
 }

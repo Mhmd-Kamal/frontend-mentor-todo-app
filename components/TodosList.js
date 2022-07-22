@@ -3,7 +3,7 @@ import { TodoItem } from './TodoItem';
 
 function TodosList({ todos }) {
   return (
-    <div className='duration-1000 flex flex-col divide-y bg-light-Very-Light-Gray rounded-md shadow-md shadow-light-Very-Light-Grayish-Blue'>
+    <div className='flex flex-col divide-y divide-light-Very-Light-Grayish-Blue dark:divide-dark-Very-Dark-Grayish-Blue bg-light-Very-Light-Gray rounded-md shadow-md shadow-light-Very-Light-Grayish-Blue dark:shadow-none dark:bg-dark-Very-Dark-Desaturated-Blue'>
       {todos.map((todo) => (
         <TodoItem key={todo._id} todo={todo} />
       ))}
