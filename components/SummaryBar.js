@@ -1,5 +1,6 @@
 import { useSetRecoilState } from 'recoil';
 import { todosAtom } from '../utils/recoilState/atoms';
+import Filters from './Filters';
 
 export function SummaryBar({ todos }) {
   const setTodos = useSetRecoilState(todosAtom);
@@ -25,6 +26,9 @@ export function SummaryBar({ todos }) {
   return (
     <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue dark:text-light-Very-Dark-Grayish-Blue'>
       <p className=''>{left.length} items left</p>
+      <div className='hidden xl:flex'>
+        <Filters />
+      </div>
       <button onClick={handleDeleteCompleted}>Clear Completed</button>
     </div>
   );

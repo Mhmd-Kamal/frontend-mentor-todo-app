@@ -39,7 +39,7 @@ export function TodoItem({ todo }) {
   }
 
   return (
-    <div className='w-full '>
+    <div className='w-full'>
       <div className='flex items-center gap-3 px-6 py-4'>
         <input
           onChange={() => handleCheckTodo(todo)}
@@ -50,7 +50,7 @@ export function TodoItem({ todo }) {
           id='completed_checkbox'
         />
         <p
-          className={`flex-1 text-light-Very-Dark-Grayish-Blue dark:text-dark-Dark-Grayish-Blue focus:outline-none placeholder:text-xs ${
+          className={`flex-1 text-light-Very-Dark-Grayish-Blue dark:text-light-Dark-Grayish-Blue focus:outline-none placeholder:text-xs ${
             todo.completed === true &&
             'line-through text-light-Grayish-Blue dark:text-dark-Very-Dark-Grayish-Blue'
           }`}
