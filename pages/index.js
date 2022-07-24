@@ -12,10 +12,11 @@ import lightThemeImg from '../public/icon-sun.svg';
 
 import { darkModeAtom, todosAtom } from '../utils/recoilState/atoms';
 import { filteredTodosSelector } from '../utils/recoilState/selectors';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 const Home = () => {
   const filteredTodos = useRecoilValue(filteredTodosSelector);
-  const setTodos = useSetRecoilState(todosAtom);
+  const [todos, setTodos] = useRecoilState(todosAtom);
   const [darkMode, setDarkMode] = useRecoilState(darkModeAtom);
 
   async function fetchData() {
@@ -27,6 +28,26 @@ const Home = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const onDragEnd = (result) => {
+    console.log(result);
+    if (!result.destination) {
+      return;
+    }
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const newTodos = [...todos];
+    // newTodos.splice(result.source.index, 1);
+    // newTodos.splice(
+    //   result.destination.index,
+    //   0,
+    //   todos
+    // );
+
+    // TODO: rearrange todos to be {{id: 1, ...}, {id: 2, ...}, ...,{order:[1,2,3,4,5]}}
+  };
 
   return (
     <div className='flex justify-center min-h-screen text-sm bg-no-repeat bg-mobile-light desktop:bg-desktop-light bg-light-Very-Light-Grayish-Blue dark:bg-mobile-dark dark:bg-dark-Very-Dark-Blue dark:desktop:bg-desktop-dark'>
@@ -60,13 +81,28 @@ const Home = () => {
             />
           </button>
         </div>
-        <div className='flex-grow flex flex-col gap-4'>
-          <NewTodo />
-          <TodosList todos={filteredTodos} />
-          <div className='block xl:hidden'>
-            <Filters />
+        <DragDropContext onDragEnd={onDragEnd}>
+          <div className='flex-grow flex flex-col gap-4'>
+            <NewTodo />
+
+            {filteredTodos.length === 0 ? (
+              <div>lodaing...</div>
+            ) : (
+              <Droppable droppableId='droppable'>
+                {(provided, snapshot) => (
+                  <div ref={provided.innerRef} {...provided.droppableProps}>
+                    <TodosList provided={provided} todos={filteredTodos} />
+                    {/* {provided.placeholder} */}
+                  </div>
+                )}
+              </Droppable>
+            )}
+
+            <div className='block xl:hidden'>
+              <Filters />
+            </div>
           </div>
-        </div>
+        </DragDropContext>
         <div className=''>
           <p className='pb-16 pt-4 text-sm text-center text-light-Dark-Grayish-Blue dark:text-dark-Dark-Grayish-Blue'>
             Drag and drop to reorder list

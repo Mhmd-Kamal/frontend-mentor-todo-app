@@ -24,7 +24,7 @@ export function SummaryBar({ todos }) {
     setTodos(data.todos);
   }
   return (
-    <div className='flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue dark:text-light-Very-Dark-Grayish-Blue'>
+    <div className=' order-last flex items-center justify-between px-6 py-4 text-light-Dark-Grayish-Blue dark:text-light-Very-Dark-Grayish-Blue'>
       <p className=''>{left.length} items left</p>
       <div className='hidden xl:flex'>
         <Filters />

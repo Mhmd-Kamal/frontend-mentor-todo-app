@@ -14,8 +14,8 @@ async function handler(req, res) {
 
     case 'POST':
       try {
-        const { text, completed } = req.body;
-        const newTodo = new Todo({ text, completed });
+        const { text, completed, order } = req.body;
+        const newTodo = new Todo({ text, completed, order });
         await newTodo.save();
         res.status(200).json({ message: 'Todo created', newTodo });
       } catch (error) {

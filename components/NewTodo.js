@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { todosAtom } from '../utils/recoilState/atoms';
 
 function NewTodo() {
-  const setTodos = useSetRecoilState(todosAtom);
+  const [todos, setTodos] = useRecoilState(todosAtom);
 
   const checkbox = useRef();
   const [text, setText] = useState('');
@@ -13,11 +13,11 @@ function NewTodo() {
       event.preventDefault();
 
       const completed = checkbox.current.checked;
-
+      const order = todos.length;
       const res = await fetch('/api/todos', {
         method: 'POST',
         headers: { 'Content-type': 'application/json; charset=UTF-8' },
-        body: JSON.stringify({ text, completed }),
+        body: JSON.stringify({ text, completed, order }),
       });
       const data = await res.json();
       if (res.ok) setTodos((todos) => [...todos, data.newTodo]);
