@@ -6,6 +6,7 @@ export const filteredTodosSelector = selector({
   key: 'filteredTodos',
   get: ({ get }) => {
     const todos = get(todosAtom);
+    // console.log(todos);
     const filter = get(filterAtom);
     switch (filter) {
       case 'active':

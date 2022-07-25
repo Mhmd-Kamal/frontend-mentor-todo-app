@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import NewTodo from '../components/NewTodo';
 import TodosList from '../components/TodosList';
@@ -10,19 +11,28 @@ import Filters from '../components/Filters';
 import darkThemeImg from '../public/icon-moon.svg';
 import lightThemeImg from '../public/icon-sun.svg';
 
-import { darkModeAtom, todosAtom } from '../utils/recoilState/atoms';
+import {
+  darkModeAtom,
+  todosAtom,
+  todosOrderAtom,
+} from '../utils/recoilState/atoms';
 import { filteredTodosSelector } from '../utils/recoilState/selectors';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 const Home = () => {
   const filteredTodos = useRecoilValue(filteredTodosSelector);
   const [todos, setTodos] = useRecoilState(todosAtom);
   const [darkMode, setDarkMode] = useRecoilState(darkModeAtom);
+  const [order, setOrder] = useRecoilState(todosOrderAtom);
 
   async function fetchData() {
     const res = await fetch('/api/todos');
-    const todos = await res.json();
-    setTodos(todos);
+    const { todos, order } = await res.json();
+
+    const orderedTodos = order.map((id) =>
+      todos.find((todo) => todo._id === id)
+    );
+    setTodos(orderedTodos);
+    setOrder(order);
   }
 
   useEffect(() => {
@@ -91,7 +101,7 @@ const Home = () => {
               <Droppable droppableId='droppable'>
                 {(provided, snapshot) => (
                   <div ref={provided.innerRef} {...provided.droppableProps}>
-                    <TodosList provided={provided} todos={filteredTodos} />
+                    <TodosList provided={provided} />
                     {/* {provided.placeholder} */}
                   </div>
                 )}

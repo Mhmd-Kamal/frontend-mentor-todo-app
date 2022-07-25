@@ -1,10 +1,12 @@
 import { Schema, model, models } from 'mongoose';
 
 const todoSchema = new Schema(
-  { text: String, completed: Boolean, order: Number },
+  { text: String, completed: Boolean },
   { timestamps: true }
 );
 
-const Todo = models.Todo || model('Todo', todoSchema);
+const orderSchema = new Schema({ order: [{ type: String }] });
 
-export default Todo;
+export const Todo = models.Todo || model('Todo', todoSchema);
+
+export const Order = models.Order || model('Order', orderSchema);

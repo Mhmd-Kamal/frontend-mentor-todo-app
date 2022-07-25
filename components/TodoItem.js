@@ -1,28 +1,43 @@
 import Image from 'next/image';
 import { Draggable } from 'react-beautiful-dnd';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 
 import deleteIcon from '../public/icon-cross.svg';
-import { todosAtom } from '../utils/recoilState/atoms';
+import { todosAtom, todosOrderAtom } from '../utils/recoilState/atoms';
 
 export function TodoItem({ todo, index }) {
   const setTodos = useSetRecoilState(todosAtom);
+  const [order, setOrder] = useRecoilState(todosOrderAtom);
 
   async function handleDelete(deletedTodo) {
     try {
-      const res = await fetch(`/api/todos/${todo._id}`, {
+      setTodos((todos) => todos.filter((todo) => todo._id !== deletedTodo._id));
+
+      const newOrder = order.filter((id) => id !== deletedTodo._id);
+      setOrder(newOrder);
+
+      const res = await fetch(`/api/todos/${deletedTodo._id}`, {
         method: 'DELETE',
+        headers: {
+          'content-type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({ newOrder }),
       });
-      if (res.ok)
-        setTodos((todos) =>
-          todos.filter((todo) => todo._id !== deletedTodo._id)
-        );
     } catch (error) {
       console.log(error);
     }
   }
 
   async function handleCheckTodo(modifiedTodo) {
+    setTodos((todos) => {
+      const index = todos.findIndex((todo) => todo._id === modifiedTodo._id);
+      return [
+        ...todos.slice(0, index),
+        { ...todos[index], completed: !todos[index].completed },
+        ...todos.slice(index + 1),
+      ];
+    });
+
     const res = await fetch(`/api/todos/${todo._id}`, {
       method: 'PUT',
       headers: {
@@ -31,13 +46,16 @@ export function TodoItem({ todo, index }) {
       body: JSON.stringify({ completed: !todo.completed }),
     });
 
-    const data = await res.json();
-    // console.log(data);
-    if (res.ok)
+    if (!res.ok) {
       setTodos((todos) => {
         const index = todos.findIndex((todo) => todo._id === modifiedTodo._id);
-        return [...todos.slice(0, index), data.todo, ...todos.slice(index + 1)];
+        return [
+          ...todos.slice(0, index),
+          { ...todo[index], completed: !todo[index].completed },
+          ...todos.slice(index + 1),
+        ];
       });
+    }
   }
 
   return (
