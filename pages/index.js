@@ -24,23 +24,22 @@ const Home = () => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeAtom);
   const [order, setOrder] = useRecoilState(todosOrderAtom);
 
+  const [loading, setLoading] = useState(false);
   async function fetchData() {
     const res = await fetch('/api/todos');
     const { todos, order } = await res.json();
 
-    const orderedTodos = order.map((id) =>
-      todos.find((todo) => todo._id === id)
-    );
-    setTodos(orderedTodos);
+    setTodos(todos);
     setOrder(order);
   }
 
   useEffect(() => {
     fetchData();
+    setLoading(false);
   }, []);
 
-  const onDragEnd = (result) => {
-    console.log(result);
+  // reorder the todos array on drag nd drop
+  const onDragEnd = async (result) => {
     if (!result.destination) {
       return;
     }
@@ -48,15 +47,17 @@ const Home = () => {
       return;
     }
 
-    const newTodos = [...todos];
-    // newTodos.splice(result.source.index, 1);
-    // newTodos.splice(
-    //   result.destination.index,
-    //   0,
-    //   todos
-    // );
+    const newOrder = [...order];
+    newOrder.splice(result.source.index, 1);
+    newOrder.splice(result.destination.index, 0, result.draggableId);
 
-    // TODO: rearrange todos to be {{id: 1, ...}, {id: 2, ...}, ...,{order:[1,2,3,4,5]}}
+    setOrder(newOrder);
+
+    const res = await fetch('/api/todos/reorder', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({ order: newOrder }),
+    });
   };
 
   return (
