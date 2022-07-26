@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState, useRecoilState } from 'recoil';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
@@ -17,6 +17,7 @@ import {
   todosOrderAtom,
 } from '../utils/recoilState/atoms';
 import { filteredTodosSelector } from '../utils/recoilState/selectors';
+import Loading from '../components/Loading';
 
 const Home = () => {
   const filteredTodos = useRecoilValue(filteredTodosSelector);
@@ -24,7 +25,7 @@ const Home = () => {
   const [darkMode, setDarkMode] = useRecoilState(darkModeAtom);
   const [order, setOrder] = useRecoilState(todosOrderAtom);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   async function fetchData() {
     const res = await fetch('/api/todos');
     const { todos, order } = await res.json();
@@ -34,6 +35,7 @@ const Home = () => {
   }
 
   useEffect(() => {
+    setLoading(true);
     fetchData();
     setLoading(false);
   }, []);
@@ -96,8 +98,8 @@ const Home = () => {
           <div className='flex-grow flex flex-col gap-4'>
             <NewTodo />
 
-            {filteredTodos.length === 0 ? (
-              <div>lodaing...</div>
+            {loading ? (
+              <Loading />
             ) : (
               <Droppable droppableId='droppable'>
                 {(provided, snapshot) => (
